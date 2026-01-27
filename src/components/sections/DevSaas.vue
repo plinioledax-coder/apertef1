@@ -28,7 +28,7 @@ const projects = ref([
     {
         id: 3,
         category: 'App Web / Agendamento',
-        title: 'Salão Modesto',
+        title: 'Studio Modesto',
         // Dedução das funcionalidades essenciais de salão
         desc: 'Sistema completo de gestão para salões de beleza. Agenda multi-profissional, lembretes automáticos via WhatsApp para reduzir faltas e controle de comissões.',
         techs: ['Vue 3', 'PWA', 'Firebase'],
