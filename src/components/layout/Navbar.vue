@@ -5,14 +5,31 @@ import { Menu, X, Terminal } from 'lucide-vue-next'
 const isScrolled = ref(false)
 const isMenuOpen = ref(false)
 
-// Bloqueia o scroll do corpo quando o menu mobile está aberto
+// Bloqueia o scroll da página quando o menu mobile está aberto
 watch(isMenuOpen, (val) => {
   document.body.style.overflow = val ? 'hidden' : ''
 })
 
-// Detecta scroll para mudar o estilo da navbar
+// Monitora o scroll para mudar a cor da barra
 const checkScroll = () => {
   isScrolled.value = window.scrollY > 20
+}
+
+// Função para rolar até o topo (Logo)
+const scrollToTop = () => {
+  isMenuOpen.value = false
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  })
+}
+
+// Função de navegação suave para as seções
+const scrollTo = async (id) => {
+  isMenuOpen.value = false // Fecha o menu primeiro
+  await nextTick() // Espera o DOM atualizar
+  const el = document.getElementById(id)
+  if (el) el.scrollIntoView({ behavior: 'smooth' })
 }
 
 onMounted(() => {
@@ -23,14 +40,6 @@ onUnmounted(() => {
   window.removeEventListener('scroll', checkScroll)
   document.body.style.overflow = ''
 })
-
-// Função de scroll suave
-const scrollTo = async (id) => {
-  isMenuOpen.value = false
-  await nextTick()
-  const el = document.getElementById(id)
-  if (el) el.scrollIntoView({ behavior: 'smooth' })
-}
 </script>
 
 <template>
@@ -42,10 +51,12 @@ const scrollTo = async (id) => {
   >
     <div class="container mx-auto px-6 flex justify-between items-center">
 
-      <a href="#" @click.prevent="window.scrollTo(0,0)" class="group flex flex-col justify-center relative z-50">
+      <a href="#" @click.prevent="scrollToTop" class="group flex flex-col justify-center relative z-50 cursor-pointer">
           <span class="font-display font-bold text-2xl leading-none tracking-wide">
               <span class="text-white group-hover:text-brand-gold transition-colors duration-300">APERTE</span>
+              
               <span class="mx-1"></span>
+              
               <span class="text-brand-gold group-hover:text-white transition-colors duration-300">F1</span>
           </span>
           <span class="font-mono text-[9px] text-slate-500 uppercase tracking-[0.3em] group-hover:text-slate-300 transition-colors hidden md:block mt-1">
@@ -79,6 +90,7 @@ const scrollTo = async (id) => {
         <X v-if="isMenuOpen" class="w-6 h-6" />
         <Menu v-else class="w-6 h-6" />
       </button>
+
     </div>
 
     <Transition
@@ -89,7 +101,8 @@ const scrollTo = async (id) => {
       leave-from-class="opacity-100 translate-y-0"
       leave-to-class="opacity-0 -translate-y-5"
     >
-        <div v-if="isMenuOpen" class="fixed inset-0 top-[70px] bg-slate-950 z-40 flex flex-col items-center pt-10 gap-8 md:hidden border-t border-white/10">
+        <div v-if="isMenuOpen" class="fixed inset-0 top-[60px] bg-slate-950 z-40 flex flex-col items-center pt-10 gap-8 md:hidden border-t border-white/10 h-[calc(100vh-60px)] overflow-y-auto">
+            
             <button @click="scrollTo('servicos')" class="mobile-link">O Hub</button>
             <button @click="scrollTo('dev')" class="mobile-link">Dev & SaaS</button>
             <button @click="scrollTo('iphone')" class="mobile-link">Apple Repair</button>
@@ -98,13 +111,14 @@ const scrollTo = async (id) => {
             <a href="https://wa.me/5571993290895?text=Ol%C3%A1!%20Vim%20pelo%20menu%20do%20site%20e%20preciso%20de%20ajuda." class="mt-8 px-8 py-4 bg-brand-gold text-slate-950 font-bold font-mono uppercase tracking-widest rounded shadow-[0_0_20px_rgba(197,160,89,0.4)]">
                 Iniciar Atendimento
             </a>
+
         </div>
     </Transition>
   </nav> 
 </template>
 
 <style scoped>
-/* Link Desktop com animação de sublinhado */
+/* Estilo dos Links Desktop (Sublinhado Animado) */
 .nav-item {
   @apply text-sm font-sans text-slate-400 hover:text-white transition-colors relative py-1 tracking-wide;
 }
@@ -116,7 +130,7 @@ const scrollTo = async (id) => {
   @apply w-full;
 }
 
-/* Link Mobile Gigante */
+/* Estilo dos Links Mobile (Maiores) */
 .mobile-link {
     @apply font-display text-2xl text-white hover:text-brand-gold transition-colors;
 }

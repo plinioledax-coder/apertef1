@@ -1,5 +1,6 @@
 <script setup>
 // Layout
+import { ref } from 'vue'
 import Navbar from '../components/layout/Navbar.vue'
 import Footer from '../components/layout/Footer.vue'
 
@@ -11,12 +12,16 @@ import AppleRepair from '../components/sections/AppleRepair.vue' // Novo: Seçã
 import Testimonials from '../components/sections/Testimonials.vue'
 import Contact from '../components/sections/Contact.vue'
 // UI (Se você ainda não tiver esse arquivo, pode comentar por enquanto)
-import FloatingWhatsapp from '../components/ui/FloatingWhatsapp.vue' 
+import FloatingWhatsapp from '../components/ui/FloatingWhatsapp.vue'
+import CookieBanner from '../components/ui/CookieBanner.vue'
+import PrivacyModal from '../components/ui/PrivacyModal.vue'
+
+const showPrivacyPolicy = ref(false)
 </script>
 
 <template>
   <div class="min-h-screen bg-slate-950 text-slate-50 selection:bg-brand-gold selection:text-brand-dark">
-    
+
     <Navbar />
 
     <main>
@@ -36,6 +41,10 @@ import FloatingWhatsapp from '../components/ui/FloatingWhatsapp.vue'
     <Footer />
 
     <FloatingWhatsapp />
+
+    <CookieBanner @openPolicy="showPrivacyPolicy = true" />
+
+    <PrivacyModal :isOpen="showPrivacyPolicy" @close="showPrivacyPolicy = false" />
 
   </div>
 </template>
