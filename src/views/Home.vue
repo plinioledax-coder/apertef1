@@ -24,7 +24,7 @@ import FloatingWhatsapp from '../components/ui/FloatingWhatsapp.vue'
 
       <Services />
 
-      <DevSaaS />
+      <DevSaas />
 
       <AppleRepair />
 
