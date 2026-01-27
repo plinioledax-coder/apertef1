@@ -1,0 +1,31 @@
+/* 1. Importando as novas fontes: Space Grotesk (Títulos), Inter (Texto), JetBrains Mono (Detalhes) */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  /* Fundo Slate-950 (Quase preto azulado) e Texto Slate-50 (Quase branco) */
+  @apply bg-slate-950 text-slate-50 antialiased font-sans;
+}
+
+/* Opcional: Estiliza a barra de rolagem para ficar dark */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-slate-950;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-800 rounded-full hover:bg-[#C5A059];
+}
+
+/* Cor de seleção de texto (Dourado com texto escuro para contraste) */
+::selection {
+  @apply bg-[#C5A059] text-[#020617];
+}
