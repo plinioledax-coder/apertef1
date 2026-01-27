@@ -1,11 +1,17 @@
 <script setup>
 import { ref } from 'vue'
-import { Send, Instagram, MessageCircle, MapPin, Terminal, CheckCircle2, AlertCircle } from 'lucide-vue-next'
+import { Instagram, MessageCircle, MapPin, Terminal, CheckCircle2, AlertCircle, ChevronDown } from 'lucide-vue-next'
 
+// --- CONFIGURAÇÃO ---
+// Crie seu form em formspree.io e cole o código final aqui (ex: "mdorqznk")
+const FORMSPREE_ID = "mqeqwvvr" 
+
+// --- ESTADOS ---
 const form = ref({ name: '', phone: '', service: '', message: '' })
 const status = ref({ submitting: false, success: false, error: false })
+const isDropdownOpen = ref(false) // Controla o menu suspenso
 
-// Dados Reais
+// --- DADOS ---
 const contactInfo = {
     phone: '(71) 99329-0895',
     whatsappLink: 'https://wa.me/5571993290895?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Aperte%20F1%20e%20preciso%20de%20ajuda.',
@@ -14,18 +20,61 @@ const contactInfo = {
     location: 'Salvador - BA'
 }
 
+// Opções do Menu Personalizado
+const serviceOptions = [
+    { label: 'Suporte Técnico', value: 'Suporte Técnico' },
+    { label: 'Desenvolvimento Web / SaaS', value: 'Desenvolvimento Web' },
+    { label: 'Apple Repair (Tela/Bateria)', value: 'Apple Repair' },
+    { label: 'Consultoria / Outros', value: 'Outros' }
+]
+
+// --- MÉTODOS ---
+
+// Selecionar opção do menu
+const selectOption = (option) => {
+    form.value.service = option.value
+    isDropdownOpen.value = false
+}
+
+// Fechar menu ao clicar fora
+const closeDropdown = () => {
+    isDropdownOpen.value = false
+}
+
+// Enviar Formulário
 const handleSubmit = async () => {
     status.value.submitting = true
-    
-    // Simulação de envio (conecte seu Formspree ou Backend aqui)
-    setTimeout(() => {
+    status.value.error = false
+    status.value.success = false
+
+    try {
+        const response = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(form.value)
+        })
+
+        if (response.ok) {
+            // Sucesso
+            status.value.success = true
+            form.value = { name: '', phone: '', service: '', message: '' } // Limpa campos
+            
+            // Remove mensagem após 5s
+            setTimeout(() => { status.value.success = false }, 5000)
+        } else {
+            // Erro do servidor
+            status.value.error = true
+        }
+
+    } catch (e) {
+        // Erro de rede
+        status.value.error = true
+    } finally {
         status.value.submitting = false
-        status.value.success = true
-        form.value = { name: '', phone: '', service: '', message: '' }
-        
-        // Reset status após 5s
-        setTimeout(() => { status.value.success = false }, 5000)
-    }, 2000)
+    }
 }
 </script>
 
@@ -82,7 +131,7 @@ const handleSubmit = async () => {
                     </div>
                 </div>
 
-                <div class="lg:w-2/3 w-full bg-[#020617] p-8 md:p-12 rounded-xl border border-white/10 relative overflow-hidden">
+                <div class="lg:w-2/3 w-full bg-[#020617] p-8 md:p-12 rounded-xl border border-white/10 relative overflow-hidden shadow-2xl shadow-black">
                     
                     <div class="absolute top-0 left-0 w-full h-10 bg-white/5 border-b border-white/5 flex items-center px-4 gap-2">
                         <div class="w-3 h-3 rounded-full bg-red-500/50"></div>
@@ -93,9 +142,14 @@ const handleSubmit = async () => {
 
                     <form @submit.prevent="handleSubmit" class="mt-8 space-y-8 relative z-10">
                         
-                        <div v-if="status.success" class="p-4 bg-green-500/10 border border-green-500/20 text-green-400 font-mono text-xs flex items-center gap-3 rounded">
+                        <div v-if="status.success" class="p-4 bg-green-500/10 border border-green-500/20 text-green-400 font-mono text-xs flex items-center gap-3 rounded animate-in fade-in slide-in-from-top-2">
                             <CheckCircle2 class="w-4 h-4" />
                             <span>[SUCCESS]: Message transmitted successfully. Stand by for response.</span>
+                        </div>
+
+                        <div v-if="status.error" class="p-4 bg-red-500/10 border border-red-500/20 text-red-400 font-mono text-xs flex items-center gap-3 rounded animate-pulse">
+                            <AlertCircle class="w-4 h-4" />
+                            <span>[ERROR]: Connection failed. Please try WhatsApp directly.</span>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -113,17 +167,49 @@ const handleSubmit = async () => {
                             </div>
                         </div>
 
-                        <div class="group">
+                        <div class="group relative">
                             <label class="block font-mono text-[10px] uppercase tracking-widest text-brand-gold mb-2 group-focus-within:text-white transition-colors">
                                 > Select Operation
                             </label>
-                            <select v-model="form.service" class="w-full bg-transparent border-b border-white/20 py-3 text-white font-sans focus:border-brand-gold focus:outline-none transition-colors appearance-none cursor-pointer">
-                                <option value="" class="bg-slate-900 text-slate-500">Selecione o serviço...</option>
-                                <option value="suporte" class="bg-slate-900">Suporte Técnico</option>
-                                <option value="dev" class="bg-slate-900">Desenvolvimento Web / SaaS</option>
-                                <option value="apple" class="bg-slate-900">Apple Repair (Tela/Bateria)</option>
-                                <option value="outros" class="bg-slate-900">Outros</option>
-                            </select>
+                            
+                            <div 
+                                @click="isDropdownOpen = !isDropdownOpen"
+                                class="w-full bg-transparent border-b border-white/20 py-3 text-white font-sans cursor-pointer flex justify-between items-center hover:border-brand-gold/50 transition-colors select-none"
+                                :class="{ 'border-brand-gold': isDropdownOpen }"
+                            >
+                                <span v-if="form.service" class="text-white">{{ form.service }}</span>
+                                <span v-else class="text-slate-600 font-light">Selecione o serviço...</span>
+                                
+                                <ChevronDown 
+                                    class="w-4 h-4 text-brand-gold transition-transform duration-300"
+                                    :class="{ 'rotate-180': isDropdownOpen }"
+                                />
+                            </div>
+
+                            <div v-if="isDropdownOpen" @click="closeDropdown" class="fixed inset-0 z-10 cursor-default"></div>
+
+                            <Transition 
+                                enter-active-class="transition duration-200 ease-out"
+                                enter-from-class="opacity-0 -translate-y-2"
+                                enter-to-class="opacity-100 translate-y-0"
+                                leave-active-class="transition duration-150 ease-in"
+                                leave-from-class="opacity-100 translate-y-0"
+                                leave-to-class="opacity-0 -translate-y-2"
+                            >
+                                <div v-if="isDropdownOpen" class="absolute left-0 top-full mt-2 w-full bg-[#0f172a] border border-brand-gold/20 rounded shadow-xl shadow-black/50 z-20 overflow-hidden">
+                                    <ul>
+                                        <li 
+                                            v-for="option in serviceOptions" 
+                                            :key="option.value"
+                                            @click="selectOption(option)"
+                                            class="px-4 py-3 text-sm text-slate-300 hover:bg-brand-gold/10 hover:text-brand-gold cursor-pointer transition-colors font-mono border-b border-white/5 last:border-0 flex items-center gap-2"
+                                        >
+                                            <span class="w-1.5 h-1.5 rounded-full" :class="form.service === option.value ? 'bg-brand-gold' : 'bg-slate-700'"></span>
+                                            {{ option.label }}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </Transition>
                         </div>
 
                         <div class="group">

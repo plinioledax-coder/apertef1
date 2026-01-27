@@ -5,10 +5,10 @@ const services = [
     {
         id: 'support',
         icon: Wrench,
-        title: 'Suporte Técnico',
-        subtitle: 'Maintenance_Module',
-        desc: 'O essencial bem feito. Limpeza física, formatação, otimização de sistema e configuração de redes. Mantemos sua máquina rodando lisa.',
-        features: ['Limpeza Completa', 'Formatação', 'Redes', 'Upgrade de Hardware']
+        title: 'Suporte Técnico', // Mudança sutil para focar na máquina
+        subtitle: 'PC_Laptop_Repair',
+        desc: 'Devolva a vida ao seu equipamento. Especialistas em PCs, Notebooks e Workstations. Resolvemos lentidão e superaquecimento com limpeza técnica, troca de pasta térmica e upgrades que aceleram seu setup.',
+        features: ['Limpeza Química & Térmica', 'Formatação Otimizada', 'Upgrade SSD/RAM', 'Diagnóstico de Hardware']
     },
     {
         id: 'dev',
