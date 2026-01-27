@@ -2,11 +2,6 @@
 import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { ArrowRight, Code2 } from 'lucide-vue-next'
 
-// CONFIGURAÇÃO DOS PROJETOS
-// Certifique-se de colocar os vídeos na pasta: /public/videos/
-// DICA: Salve a imagem do portal de arquitetura na pasta public/projects/
-// Exemplo: public/projects/portal-magna.png
-
 const projects = ref([
     {
         id: 1,
@@ -16,7 +11,7 @@ const projects = ref([
         desc: 'Plataforma exclusiva para gestão de obras de arquitetura. O cliente acompanha o cronograma, aprova orçamentos, visualiza o feed de obra e acessa documentos financeiros em tempo real.',
         techs: ['Vue.js', 'Node.js', 'AWS'],
         // Tente usar o print real que você mandou, fica show:
-        image: '/public/images/portal-magna.png',
+        image: './images/portal-magna.png',
         // Se não tiver salvo ainda, use este placeholder temporário:
         // image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=2000&auto=format&fit=crop',
         video: '/videos/dashboard.mp4'
