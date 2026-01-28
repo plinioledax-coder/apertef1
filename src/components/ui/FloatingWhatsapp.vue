@@ -58,9 +58,9 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
       class="
         group
         fixed
-        bottom-6
+        bottom-14
         right-6
-        sm:bottom-8
+        sm:bottom-12
         sm:right-8
         z-50
         w-14
