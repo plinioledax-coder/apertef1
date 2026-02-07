@@ -5,31 +5,40 @@ import { Star, Terminal, CheckCircle2, User, Quote } from 'lucide-vue-next'
 const testimonials = [
     {
         id: 1,
-        name: 'Roberto S.',
-        role: 'CEO - Logística Express',
+        name: 'Paloma Maria',
+        role: 'CEO - Studio Modesto',
         service: 'SaaS_Development',
-        text: 'A Aperte F1 entendeu nossa lógica de negócios complexa e entregou um painel que automatizou 80% do nosso financeiro. O suporte pós-deploy foi impecável.',
+        text: 'A Aperte F1 entendeu a rotina do nosso salão e criou um painel que organizou agendamentos, caixa e controle financeiro. Hoje ganhamos muito mais tempo para focar nas clientes, e o suporte após a entrega foi excelente.',
         stars: 5,
-        date: '2025-10-12'
+        date: '2024-07-12'
     },
     {
         id: 2,
-        name: 'Juliana Paiva',
-        role: 'Arquiteta',
+        name: 'Júlia Mello',
+        role: 'Pessoa Física',
         service: 'Apple_Repair',
-        text: 'Achei que tinha perdido meu iPhone. A troca de tela foi feita na minha frente, super rápido, e a qualidade da peça é indistinguível da original. Recomendo!',
+        text: 'Achei que tinha perdido meu iPhone, mas o atendimento foi rápido e transparente. A troca de tela foi feita na minha frente, tudo explicado com clareza e sem demora. Saí muito tranquila e satisfeita.',
         stars: 5,
-        date: '2025-11-04'
+        date: '2026-01-15'
     },
     {
         id: 3,
-        name: 'Fernanda L.',
-        role: 'Empreendedora',
+        name: 'Yasmin Santana',
+        role: 'Advogada',
         service: 'Tech_Support',
-        text: 'Sempre que a rede cai ou um PC trava, eles resolvem remoto em minutos. Ter a Aperte F1 é como ter um setor de TI interno.',
+        text: 'Sempre que a rede cai ou um PC trava, eles resolvem remoto em minutos. Ter a parceria do Aperte F1 é como ter um setor de TI interno.',
         stars: 5,
-        date: '2026-01-20'
-    }
+        date: '2025-01-20'
+    },
+    {
+    id: 4,
+    name: 'Magna Studio',
+    role: 'Escritório de Arquitetura',
+    service: 'Web_Development',
+    text: 'A Aperte F1 desenvolveu nosso site e landing page com foco total em conversão. O processo foi claro, rápido e o resultado superou as expectativas. Hoje o site virou uma ferramenta real de vendas.',
+    stars: 5,
+    date: '2025-02-05'
+}
 ]
 
 // NOVAS MÉTRICAS (Foco no Cliente)
