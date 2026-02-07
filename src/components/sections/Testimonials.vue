@@ -1,7 +1,7 @@
 <script setup>
 import { Star, Terminal, CheckCircle2, User, Quote } from 'lucide-vue-next'
 
-// Dados simulados dos depoimentos
+// Dados simulados dos depoimentosF
 const testimonials = [
     {
         id: 1,
@@ -87,7 +87,7 @@ const metrics = [
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
                 <div v-for="item in testimonials" :key="item.id"
                     class="group bg-slate-900/40 border border-white/5 p-8 rounded-lg hover:border-brand-gold/30 hover:bg-slate-900/60 transition-all duration-300 relative overflow-hidden flex flex-col justify-between">
