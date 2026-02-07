@@ -17,7 +17,7 @@ const testimonials = [
         name: 'Júlia Mello',
         role: 'Pessoa Física',
         service: 'Apple_Repair',
-        text: 'Achei que tinha perdido meu iPhone, mas o atendimento foi rápido e transparente. A troca de tela foi feita na minha frente, tudo explicado com clareza e sem demora. Saí muito tranquila e satisfeita.',
+        text: 'Achei que tinha perdido meu iPhone, mas o atendimento foi rápido e transparente. Todo o processo foi explicado com clareza e resolvido sem demora. Saí muito tranquila, satisfeita e confiante no serviço.',
         stars: 5,
         date: '2026-01-15'
     },
