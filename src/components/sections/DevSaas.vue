@@ -27,7 +27,6 @@ const projects = ref([
         desc: 'Sistema de gestão para salões. Agenda multi-profissional, lembretes automáticos via WhatsApp e controle financeiro de comissões.',
         techs: ['Vue 3', 'PWA', 'Supabase'],
         image: './images/studiomodesto.png',
-        video: './videos/studiomodesto.mp4'
     }
 ])
 
