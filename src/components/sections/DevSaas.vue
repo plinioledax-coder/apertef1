@@ -1,50 +1,47 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
-import { ArrowRight, Code2, ExternalLink, Image as ImageIcon } from 'lucide-vue-next'
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { ArrowRight, Code2, Play } from 'lucide-vue-next'
 
 const projects = ref([
-    {
+{
         id: 1,
-        category: 'SaaS / Portal do Cliente',
-        title: 'Portal Magna Studio',
-        desc: 'Plataforma exclusiva para gestão de obras de arquitetura. O cliente acompanha o cronograma, aprova orçamentos, visualiza o feed de obra e acessa documentos financeiros em tempo real.',
-        techs: ['Vue.js', 'Node.js', 'AWS'],
-        // Se a imagem local não carregar, use um placeholder de "Dashboard"
-        // Dica: Tire um print da tela inteira do seu projeto Magna e salve como 'portal-magna.png' na pasta public/images
+        category: 'Site Institucional + SaaS', 
+        title: 'Ecossistema Magna Studio', 
+        desc: 'Solução ponta a ponta: Landing Page de alta conversão para captação de leads, integrada a um Portal do Cliente exclusivo. O usuário contrata pelo site e acompanha cronograma, financeiro e diário de obra pela plataforma.',
+        techs: ['Vue.js', 'Node.js', 'SEO'], // Adicionei SEO pois tem Landing Page
         image: './images/portal-magna.png', 
-        isReal: true // Flag para destacar que este é o carro-chefe
+        video: './videos/portal-magna.mp4' 
     },
     {
         id: 2,
-        category: 'Landing Page Jurídica',
-        title: 'Advocacia High-End', // Nome genérico mas imponente
-        desc: 'Site institucional de alta conversão focado na captação de clientes qualificados. Estrutura de autoridade, carregamento instantâneo e integração direta com CRM e WhatsApp.',
-        techs: ['Nuxt', 'Tailwind', 'SEO'],
-        // Imagem de um escritório ou site clean jurídico
-        image: 'https://images.unsplash.com/photo-1555421689-d68471e189f2?q=80&w=1920&auto=format&fit=crop',
-        isReal: false
+        category: 'Landing Page / Saúde',
+        title: 'Psicologia Clínica',
+        desc: 'Site minimalista focado na conversão de pacientes particulares. Integração com Google Agenda, blog para SEO e design acolhedor.',
+        techs: ['Nuxt', 'Motion', 'SEO'],
+        image: './images/juliapaim.png', 
     },
     {
         id: 3,
         category: 'Web App / Agendamento',
-        title: 'Beauty Scheduler', // Nome de "Produto"
-        desc: 'Sistema completo de gestão para salões de beleza. Agenda multi-profissional, lembretes automáticos via WhatsApp para reduzir faltas e controle de comissões.',
-        techs: ['Vue 3', 'PWA', 'Firebase'],
-        // Imagem que remete a um app ou dashboard clean
-        image: 'https://images.unsplash.com/photo-1616469829581-73993eb86b02?q=80&w=1920&auto=format&fit=crop',
-        isReal: false
+        title: 'Studio Modesto',
+        desc: 'Sistema de gestão para salões. Agenda multi-profissional, lembretes automáticos via WhatsApp e controle financeiro de comissões.',
+        techs: ['Vue 3', 'PWA', 'Supabase'],
+        image: './images/studiomodesto.png',
+        video: './videos/studiomodesto.mp4'
     }
 ])
 
 const activeProject = ref(0)
+const videoRef = ref(null)
 const autoPlayTimer = ref(null)
+const isVideoPlaying = ref(false)
 
 // --- ROTAÇÃO AUTOMÁTICA ---
 const startAutoRotation = () => {
     stopAutoRotation()
     autoPlayTimer.value = setInterval(() => {
         nextProject()
-    }, 6000) // Aumentei para 6s para dar mais tempo de ler
+    }, 6000)
 }
 
 const stopAutoRotation = () => {
@@ -53,21 +50,47 @@ const stopAutoRotation = () => {
 
 const nextProject = () => {
     activeProject.value = (activeProject.value + 1) % projects.value.length
+    isVideoPlaying.value = false // Reseta estado do vídeo ao trocar
 }
 
 const selectProject = (index) => {
     activeProject.value = index
+    isVideoPlaying.value = false
     stopAutoRotation()
     startAutoRotation()
 }
 
-// --- CONTROLE MOUSE ---
-const handleMouseEnter = () => {
-    stopAutoRotation() // Pausa para o usuário ver os detalhes
+// --- CONTROLE DE VÍDEO INTELIGENTE ---
+const handleMouseEnter = async () => {
+    stopAutoRotation() // Para o carrossel
+    if (videoRef.value) {
+        try {
+            // O nextTick garante que o DOM atualizou se houver transição
+            await nextTick() 
+            const playPromise = videoRef.value.play()
+            
+            if (playPromise !== undefined) {
+                playPromise
+                    .then(() => {
+                        isVideoPlaying.value = true
+                    })
+                    .catch((error) => {
+                        console.warn("Autoplay bloqueado pelo navegador ou arquivo não encontrado:", error)
+                    })
+            }
+        } catch (e) {
+            console.error(e)
+        }
+    }
 }
 
 const handleMouseLeave = () => {
-    startAutoRotation() // Retoma
+    startAutoRotation() // Retoma o carrossel
+    if (videoRef.value) {
+        videoRef.value.pause()
+        videoRef.value.currentTime = 0 // Volta para o início (opcional, parece mais limpo)
+        isVideoPlaying.value = false
+    }
 }
 
 // Lifecycle
@@ -86,10 +109,9 @@ onUnmounted(() => {
         <div class="absolute inset-0 overflow-hidden pointer-events-none opacity-5">
             <div class="font-mono text-xs text-brand-gold p-10 leading-loose select-none">
                 &lt;template&gt;<br>
-                &nbsp;&nbsp;&lt;Project_Showcase :mode="immersive" /&gt;<br>
-                &nbsp;&nbsp;&lt;High_Performance_Build /&gt;<br>
-                &lt;/template&gt;<br><br>
-                const stack = ['Vue', 'Nuxt', 'Tailwind'];
+                &nbsp;&nbsp;&lt;Video_Preview :source="activeSource" /&gt;<br>
+                &nbsp;&nbsp;&lt;Interaction_Handler /&gt;<br>
+                &lt;/template&gt;
             </div>
         </div>
 
@@ -104,15 +126,14 @@ onUnmounted(() => {
                         </span>
                     </div>
                     <h2 class="font-display text-4xl md:text-5xl font-bold text-white">
-                        Projetos & <br>
+                        Projetos <br>
                         <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold to-yellow-100">
-                            Soluções Digitais
+                            Realizados
                         </span>
                     </h2>
                 </div>
-
                 <p class="font-sans text-slate-400 max-w-md text-sm leading-relaxed text-center md:text-right">
-                    Desenvolvemos ecossistemas digitais. Abaixo, confira nosso case principal e os tipos de soluções que criamos para escalar negócios.
+                    Do design à implementação. Veja abaixo demonstrações reais das soluções que desenvolvemos para nossos parceiros.
                 </p>
             </div>
 
@@ -133,9 +154,6 @@ onUnmounted(() => {
                             <span class="font-mono text-[10px] uppercase tracking-widest text-slate-500 group-hover:text-brand-gold transition-colors">
                                 {{ project.category }}
                             </span>
-                            <span v-if="project.isReal" class="text-[9px] bg-brand-gold text-slate-900 px-1.5 py-0.5 rounded font-bold uppercase">
-                                Case Real
-                            </span>
                         </div>
 
                         <h3 class="font-display text-xl font-bold text-white mb-2 pl-3 group-hover:text-brand-gold transition-colors">
@@ -153,11 +171,9 @@ onUnmounted(() => {
                     </div>
                 </div>
 
-                <div class="lg:col-span-8 relative h-[300px] md:h-[500px] flex items-center justify-center"
-                     @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
+                <div class="lg:col-span-8 relative h-[300px] md:h-[500px] flex items-center justify-center">
 
-                    <div class="absolute inset-0 bg-brand-gold/5 blur-3xl rounded-full opacity-50 transition-opacity duration-1000"
-                         :class="activeProject === 0 ? 'opacity-50' : 'opacity-20'"></div>
+                    <div class="absolute inset-0 bg-brand-gold/5 blur-3xl rounded-full opacity-50 transition-opacity duration-1000"></div>
 
                     <Transition name="fade" mode="out-in">
                         <div :key="activeProject" class="relative w-full max-w-4xl transform transition-all duration-500">
@@ -169,22 +185,24 @@ onUnmounted(() => {
                                     <div class="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/50"></div>
                                 </div>
                                 <div class="flex-1 bg-black/40 rounded h-6 mx-4 flex items-center px-3 overflow-hidden border border-white/5">
-                                    <div class="w-3 h-3 mr-2 text-slate-600">
-                                        <div class="w-full h-full border-2 border-slate-600 rounded-full opacity-50"></div>
-                                    </div>
                                     <span class="font-mono text-[10px] text-slate-500 truncate opacity-70">
                                         https://{{ projects[activeProject].title.toLowerCase().replace(/[^a-z0-9]/g, '') }}.app
                                     </span>
                                 </div>
                             </div>
 
-                            <div class="aspect-video bg-slate-900 border-x border-b border-white/10 rounded-b-lg overflow-hidden relative group">
+                            <div class="aspect-video bg-slate-900 border-x border-b border-white/10 rounded-b-lg overflow-hidden relative group cursor-pointer"
+                                 @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
                                 
-                                <img :src="projects[activeProject].image" 
-                                     :alt="projects[activeProject].title"
-                                     class="w-full h-full object-cover transition-transform duration-[10s] ease-out group-hover:scale-110"
-                                     loading="lazy"
-                                />
+                                <video 
+                                    ref="videoRef" 
+                                    :src="projects[activeProject].video"
+                                    :poster="projects[activeProject].image"
+                                    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                    muted 
+                                    loop 
+                                    playsinline
+                                ></video>
 
                                 <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#020617] via-[#020617]/80 to-transparent pointer-events-none z-10"></div>
 
@@ -195,10 +213,10 @@ onUnmounted(() => {
                                     </span>
                                 </div>
 
-                                <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-30 bg-black/20 backdrop-blur-[2px]">
-                                    <div class="bg-brand-gold text-slate-900 px-6 py-3 rounded font-bold text-sm flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 shadow-xl shadow-brand-gold/20">
-                                        <ImageIcon class="w-4 h-4" />
-                                        <span>Visualizar Conceito</span>
+                                <div class="absolute inset-0 flex items-center justify-center transition-all duration-300 pointer-events-none z-30"
+                                     :class="isVideoPlaying ? 'opacity-0 scale-150' : 'opacity-100 scale-100'">
+                                    <div class="w-16 h-16 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center group-hover:bg-brand-gold group-hover:text-slate-900 group-hover:border-brand-gold transition-colors">
+                                        <Play class="w-6 h-6 fill-current" />
                                     </div>
                                 </div>
                             </div>
@@ -218,7 +236,6 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-/* Transição entre slides */
 .fade-enter-active,
 .fade-leave-active {
     transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
@@ -226,21 +243,20 @@ onUnmounted(() => {
 
 .fade-enter-from {
     opacity: 0;
-    transform: translateY(10px) scale(0.98);
+    transform: translateY(10px);
 }
 
 .fade-leave-to {
     opacity: 0;
-    transform: translateY(-10px) scale(0.98);
+    transform: translateY(-10px);
 }
 
-/* Animação da barra de progresso */
 @keyframes progress {
     from { transform: scaleY(0); }
     to { transform: scaleY(1); }
 }
 
 .animate-progress {
-    animation: progress 6s linear infinite; /* Sincronizado com o timer do JS */
+    animation: progress 6s linear infinite;
 }
 </style>
